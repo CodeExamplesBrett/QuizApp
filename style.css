@@ -28,3 +28,46 @@ body {
 .bg-success, .bg-danger {
     color: white;
 }
+.width-100 {
+    width: 100%;
+}
+.text-center {
+    text-align: center;
+}
+.end_text {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+.button_row {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+@media(max-width: 800px) {
+.navbar {
+    display: none !important;
+}
+}
+
+@media(max-width: 500px) {
+   /*  .mb-2 {
+        border: 1px solid rgb(0,0,0.4) !important;
+    } */
+ /*    .card {
+        border: none !important;
+    } */
+    .container {
+        background-color: white !important;
+        padding: 0 !important;
+    }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .quiz_card {
+        height: 100vh !important;
+    }
+}
+    

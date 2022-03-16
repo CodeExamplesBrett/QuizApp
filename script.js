@@ -57,7 +57,10 @@ let questions = [
     }
 ];
 
+let correctAnswers = 0;
 let currentQuestion = 0;
+let AUDIO_SUCCESS = new Audio('audio/success.mp3');
+let AUDIO_WRONG = new Audio('audio/wrong.mp3');
 
 
 function init() {
@@ -67,51 +70,58 @@ function init() {
         showCurrentQuestion();
 }
 
+
 function showCurrentQuestion() {
 
-    if(currentQuestion >= questions.length) {
-        document.getElementById('endScreen').style = '';
-        document.getElementById('questionBody').style = 'display: none';
-    } else {
-
-    let question = questions[currentQuestion];
-    document.getElementById('question_text').innerHTML = question['question'];
-    document.getElementById('answer_1').innerHTML = question['answer_1'];
-    document.getElementById('answer_2').innerHTML = question['answer_2'];
-    document.getElementById('answer_3').innerHTML = question['answer_3'];
-    document.getElementById('answer_4').innerHTML = question['answer_4'];  
+    if(gameIsOver()) {
+        showEndScreen()
+    } else {  //show question
+        updateProgressBar();
+        updateToNextQuestion();
     }
 }
 
+
+function gameIsOver() {
+    return currentQuestion >= questions.length;
+}
+
+
 function answer(selection) {   //parameter übergeben von onclick von Button in html zB answer_1, 2, 3 oder 4
-    let question = questions[currentQuestion];  // Aktuelle Feage wird gewählt von global variable "currentQuestion"
+    let question = questions[currentQuestion];  // Aktuelle Frage wird gewählt von global variable "currentQuestion"
     let selectedQuestionNumber = selection.slice(-1); //von parameter wird letze Buchstabe ausgewählt.
 
     let idofRightAnswer = `answer_` + question['right_answer'];
     // oder Junas's Lösung:  let idofRightAnswer = `answer_${question['right_answer']}`;
     //console.log('var', idofRightAnswer)
 
-    if(selectedQuestionNumber == question['right_answer']) { //Auswahl mit richtige Antwort verglichen.
-        console.log('yes man correct');  // war es rightig oder falsch
+    if(rightAnswerSelected(selectedQuestionNumber, question)) { 
         document.getElementById(selection).parentNode.classList.add('bg-success');
+        AUDIO_SUCCESS.play();
+        correctAnswers++;
     } else {
         document.getElementById(selection).parentNode.classList.add('bg-danger');
         document.getElementById(idofRightAnswer).parentNode.classList.add('bg-success');
-        console.log('Falsch')  // war es rightig oder falsch
+        AUDIO_WRONG.play();
     }
-    //console.log('selected', selectedQuestionNumber);
     //console.log('richtig_antwort__', question['right_answer']);
-
     document.getElementById('next_button').disabled = false;
 }
+
+
+function rightAnswerSelected(selectedQuestionNumber, question) {
+    //Auswahl mit richtige Antwort verglichen.
+    return selectedQuestionNumber == question['right_answer'];
+}
+
 
 function nextQuestion() {
     currentQuestion++;  // zB von 0 auf 1 
     document.getElementById('current_q_number').innerHTML = currentQuestion + 1;
     resetAnswerButtons()
-    showCurrentQuestion();
-    
+    showCurrentQuestion();  
 }
+
 
 function resetAnswerButtons() {
     document.getElementById('next_button').disabled = true;
@@ -119,4 +129,45 @@ function resetAnswerButtons() {
     document.getElementById('answer_2').parentNode.classList.remove('bg-success','bg-danger');
     document.getElementById('answer_3').parentNode.classList.remove('bg-success','bg-danger');
     document.getElementById('answer_4').parentNode.classList.remove('bg-success','bg-danger');  
+}
+
+
+function restartGame() {
+    document.getElementById('header_image').src='./img/quiz_img.png'
+    document.getElementById('endScreen').style = 'display: none'; //Endscreen ausblenden
+        document.getElementById('questionBody').style = '';  // questionBody wieder anzeigen
+    correctAnswers = 0;
+    currentQuestion = 0;
+    init();
+}
+
+
+function showEndScreen() {
+    document.getElementById('endScreen').style = '';
+    document.getElementById('questionBody').style = 'display: none';  
+    //renders the number of correctly answered questions in the finish screen
+    document.getElementById('correctAnswers').innerHTML = correctAnswers; 
+    //renders the total number of questions in the finish screen
+    document.getElementById('NumberOfQuest').innerHTML = questions.length;
+    document.getElementById('header_image').src='./img/end.png'
+}
+
+
+function updateToNextQuestion() {
+    
+    let question = questions[currentQuestion];
+
+    document.getElementById('question_text').innerHTML = question['question'];
+    document.getElementById('answer_1').innerHTML = question['answer_1'];
+    document.getElementById('answer_2').innerHTML = question['answer_2'];
+    document.getElementById('answer_3').innerHTML = question['answer_3'];
+    document.getElementById('answer_4').innerHTML = question['answer_4']; 
+} 
+
+
+function updateProgressBar() {
+    let percent = (currentQuestion + 1) / questions.length;
+    percent = Math.round(percent * 100);
+    document.getElementById('progress_bar').innerHTML = `${percent} %`;
+    document.getElementById('progress_bar').style.width = `${percent}%`;
 }

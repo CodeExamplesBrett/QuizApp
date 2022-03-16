@@ -31,10 +31,21 @@
 
     <div class="container">
         <div class="card quiz_card">
-            <img src="./img/quiz_img.png" class="card-img-top">
+            <img src="./img/quiz_img.png" id="header_image" class="card-img-top">
+            <div class="progress">
+              <div class="progress-bar" id="progress_bar" role="progressbar" style="width: 0%;">25%</div>
+            </div>
 
             <div class="card-body" id="endScreen" style="display: none;">
-              Quiz beendet!
+              
+              <div class="text-center end_text">Quiz beendet!</div>
+
+              <div class="text-center">Du hast <b id="correctAnswers">xxx</b> Fragen von <b id="NumberOfQuest">xxx</b> richtig beantwortet.</div>
+
+              <div class="button_row">
+                <button onclick="restartGame()" class="btn btn-primary">Erneut spielen</button>
+              </div>
+
             </div>
 
             <div class="card-body" id="questionBody">
